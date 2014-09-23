@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.sitec</groupId>
+    <artifactId>NativeLibraryLoader</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
+    <name>NativeLibraryLoader</name>
+    
+    <pluginRepositories>
+      <pluginRepository>
+          <id>central</id>
+          <name>sitec systems GmbH Plugin-Repository</name>
+          <url>http://172.16.40.5:8080/nexus/content/groups/public</url>
+          <releases>
+              <enabled>true</enabled>
+              <updatePolicy>daily</updatePolicy>
+          </releases>
+          <snapshots>
+              <enabled>false</enabled>
+          </snapshots>
+      </pluginRepository>
+  </pluginRepositories>
+
+  <repositories>
+      <repository>
+          <id>central</id>
+          <name>sitec systems GmbH Repository</name>
+          <url>http://172.16.40.5:8080/nexus/content/groups/public</url>
+          <releases>
+              <enabled>true</enabled>
+              <updatePolicy>daily</updatePolicy>
+          </releases>
+          <snapshots>
+              <enabled>false</enabled>
+          </snapshots>
+      </repository>
+  </repositories>
+  
+  <scm>
+      <connection>scm:svn:http://172.16.40.5/svn/14_0017/trunk</connection>
+      <developerConnection>scm:svn:http://172.16.40.5/svn/14_0017/trunk</developerConnection>
+  </scm>
+  
+  <profiles>
+      <profile>
+          <id>build-int</id>
+          <build>
+              <plugins>
+                  <plugin>
+                      <groupId>org.codehaus.mojo</groupId>
+                      <artifactId>buildnumber-maven-plugin</artifactId>
+                      <executions>
+                          <execution>
+                              <phase>validate</phase>
+                              <goals>
+                                  <goal>create</goal>
+                              </goals>
+                              <configuration>
+                                  <useLastCommittedRevision>true</useLastCommittedRevision>
+                                  <doCheck>false</doCheck>
+                                  <doUpdate>false</doUpdate>
+                              </configuration>
+                          </execution>
+                      </executions>
+                  </plugin>
+                  <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-jar-plugin</artifactId>
+                      <configuration>
+                          <archive>
+                              <manifestEntries>
+                                  <Build-Number>${buildNumber}</Build-Number>
+                              </manifestEntries>
+                              <addMavenDescriptor>false</addMavenDescriptor>
+                          </archive>
+                      </configuration>
+                  </plugin>
+              </plugins>
+          </build>
+          <distributionManagement>
+              <snapshotRepository>
+                  <id>nexus.snapshots.upload</id>
+                  <name>Nexus-Repository für Snapshots</name>
+                  <url>http://172.16.40.5:8080/nexus/content/repositories/snapshots</url>
+              </snapshotRepository>
+          </distributionManagement>
+      </profile>
+  </profiles>
+</project>
