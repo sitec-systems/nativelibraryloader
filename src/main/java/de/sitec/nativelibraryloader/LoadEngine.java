@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Contains the pure loading logic for loading of native librarys.
@@ -37,6 +39,7 @@ public class LoadEngine
     
     private static final String ROOT = "native";
     private static final String HF_ABI_SUPPORT = "Tag_ABI_VFP_args: VFP registers";
+    private static final Logger LOG = LoggerFactory.getLogger(LoadEngine.class);
 
     /**
      * Constructor. Creates an temp directory for the extraction of native librarys.
@@ -46,11 +49,11 @@ public class LoadEngine
      */
     public LoadEngine(final String namespace) throws IOException
     {
-        System.out.println("OS: " + os);
-        System.out.println("Architecture: " + architecture);
+        LOG.info("OS: " + os);
+        LOG.info("Architecture: " + architecture);
         this.namespace = getWellformedNamespace(namespace);
         final String tempDir = this.namespace.substring(this.namespace.lastIndexOf('.') + 1) + "_";
-        System.out.println("Create temp directory: " + tempDir + " for package: " + this.namespace); 
+        LOG.debug("Create temp directory: " + tempDir + " for package: " + this.namespace); 
         tempDirectory = Files.createTempDirectory(tempDir);
         tempDirectory.toFile().deleteOnExit();
     }
@@ -77,7 +80,7 @@ public class LoadEngine
      */
     public void loadLibrary(final String library) 
     {
-        System.out.println("Load native library: '" + namespace + "." + library);
+        LOG.info("Load native library: '" + namespace + "." + library);
         
         Path path = LOADED_LIBRARYS.get(namespace + "." + library);
         
@@ -89,7 +92,7 @@ public class LoadEngine
                 LOADED_LIBRARYS.put(namespace + "." + library, path);
             }
 
-            System.out.println("Path: " + path.toString());
+            LOG.debug("Path: " + path.toString());
             
             System.load(path.toString());
         }
@@ -99,7 +102,7 @@ public class LoadEngine
                     + " was not found: " + ex.getMessage());
         }
 
-        System.out.println("Native library: '" + namespace + "." + library + "' loaded");
+        LOG.info("Native library: '" + namespace + "." + library + "' loaded");
     }
     
     /**
@@ -130,7 +133,7 @@ public class LoadEngine
         
         final String resourcePath = sb.toString();
         
-        System.out.println("ResourcePath: " + resourcePath);
+        LOG.debug("ResourcePath: " + resourcePath);
         
         Path result;
         
@@ -199,7 +202,7 @@ public class LoadEngine
         } 
         catch (final InterruptedException ex) 
         {
-            System.out.println("The ABI request was interrupted");
+            LOG.error("The ABI request was interrupted", ex);
         }
 
         if(p.exitValue() != 0) 
