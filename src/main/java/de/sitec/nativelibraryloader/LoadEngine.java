@@ -49,11 +49,11 @@ public class LoadEngine
      */
     public LoadEngine(final String namespace) throws IOException
     {
-        LOG.info("OS: " + os);
-        LOG.info("Architecture: " + architecture);
+        LOG.info("OS: {}", os);
+        LOG.info("Architecture: {}", architecture);
         this.namespace = getWellformedNamespace(namespace);
         final String tempDir = this.namespace.substring(this.namespace.lastIndexOf('.') + 1) + "_";
-        LOG.debug("Create temp directory: " + tempDir + " for package: " + this.namespace); 
+        LOG.debug("Create temp directory: {} for package: {}", tempDir, this.namespace); 
         tempDirectory = Files.createTempDirectory(tempDir);
         tempDirectory.toFile().deleteOnExit();
     }
@@ -92,7 +92,7 @@ public class LoadEngine
                 LOADED_LIBRARYS.put(namespace + "." + library, path);
             }
 
-            LOG.debug("Path: " + path.toString());
+            LOG.debug("Path: {}", path.toString());
             
             System.load(path.toString());
         }
@@ -102,7 +102,7 @@ public class LoadEngine
                     + " was not found: " + ex.getMessage());
         }
 
-        LOG.info("Native library: '" + namespace + "." + library + "' loaded");
+        LOG.info("Native library: '{}.{}' loaded", namespace, library);
     }
     
     /**
@@ -133,7 +133,7 @@ public class LoadEngine
         
         final String resourcePath = sb.toString();
         
-        LOG.debug("ResourcePath: " + resourcePath);
+        LOG.debug("ResourcePath: {}", resourcePath);
         
         Path result;
         
