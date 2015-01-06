@@ -155,7 +155,7 @@ public class NativeLibraryLoader
      * @param library The name of the native library file
      * @since 1.0
      */
-    public static void loadLibrary(final String namespace, final String library) 
+    public synchronized static void loadLibrary(final String namespace, final String library) 
     {
         if(!namespace.matches(NAMESPACE_PATTERN))
         {
