@@ -36,14 +36,29 @@ public class NativeLibraryLoader
 {
     private static final Map<String, Path> LOADED_LIBRARYS = new ConcurrentHashMap<>();
     private static final Path ROOT_DIR = Paths.get(System.getProperty("java.io.tmpdir")).resolve("native_library_loader");
-    private static final String os = System.getProperty("os.name");
-    private static final String architecture = getArchitecture(System.getProperty("os.arch"));
+    private static final String OS = System.getProperty("os.name");
+    private static final String ARCHITECTURE = getArchitecture(System.getProperty("os.arch"));
     private static final String ROOT = "native";
     private static final String HF_ABI_SUPPORT = "Tag_ABI_VFP_args: VFP registers";
     private static final Logger LOG = LoggerFactory.getLogger(NativeLibraryLoader.class);
     private static final byte DIR_CREATING_TRAILS = 20;
     private static final String NAMESPACE_PATTERN = "\\w+[./]\\w+[./]\\w+";
     
+    /**
+     * Creates a temp directory for the namespace in the operating system temp 
+     * directory. For example:
+     * 
+     * <code>.../tmp/native_library_loader/com/company/library/0</code>
+     * 
+     * If a temp directory already exists for the namespace then it trys to delete 
+     * them. If the deleting impossible (e. g. an other instance holds access 
+     * to the directory) then creates a new temp directory with next index folder.
+     * @param namespace The namespace for the library like com.company.library 
+     *        or com/company/library
+     * @return The created temp directory
+     * @throws IOException The creating of the temp directory has failed
+     * @since 1.0
+     */
     private static Path createTempDirectory(final String namespace) throws IOException
     {
         final Path tempDir = ROOT_DIR.resolve(getWellformedNamespace(namespace).replace('.', '/'));
@@ -80,6 +95,12 @@ public class NativeLibraryLoader
         throw new IOException("Creating a temp directory has failed for unkown reason");
     }
     
+    /**
+     * Deletes the input directory recursive with all content.
+     * @param path The path of the directory to delete
+     * @throws IOException The deleting of the directory has failed
+     * @since 1.0
+     */
     private static void deleteDirectory(final Path path) throws IOException
     {
         LOG.debug("Delete: " + path);
@@ -113,8 +134,9 @@ public class NativeLibraryLoader
     
     /**
      * Replaces unwanted chars from namespace. Well formed mean dot notation like
-     * de.sitec.nativelibrary.
-     * @param namespace The namespace in supported format
+     * com.company.library.
+     * @param namespace The namespace for the library like com.company.library 
+     *        or com/company/library
      * @return The well formed namespace
      * @since 1.0
      */
@@ -124,11 +146,11 @@ public class NativeLibraryLoader
     }
     
     /**
-     * Loads the input library based on namepspace. Use a lazy loading meachnism.
-     * If a library is load at the first time its need the extracation. If the library
-     * already previously loaed then no more extraction is neede and the extracted 
-     * file will used.
-     * @param namespace The the namesapce for the library like com.company.library 
+     * Loads the input library based on namespace. Use a lazy loading meachnism.
+     * If a library is load at the first time its need the extraction from JAR file. 
+     * If the library already previously loaded, then no more extraction is needed
+     * and the extracted file will used.
+     * @param namespace The namespace for the library like com.company.library 
      *        or com/company/library
      * @param library The name of the native library file
      * @since 1.0
@@ -142,7 +164,7 @@ public class NativeLibraryLoader
         
         LOG.info("Load native library: '" + getWellformedNamespace(namespace) 
                 + "." + library);
-        LOG.info("OS: {}, Architecture: {}", os, architecture);
+        LOG.info("OS: {}, Architecture: {}", OS, ARCHITECTURE);
         
         Path path = LOADED_LIBRARYS.get(namespace + "." + library);
         
@@ -170,7 +192,8 @@ public class NativeLibraryLoader
     
     /**
      * Extracts the library from the JAR file based on namespace convention.
-     * @param namespace The namespace of the using software
+     * @param namespace The namespace for the library like com.company.library 
+     *        or com/company/library
      * @param library The name of the native library file
      * @return The temporary local path
      * @throws IOException If the extraction has failed
@@ -179,7 +202,7 @@ public class NativeLibraryLoader
     private static Path extractNativeLibrary(final String namespace, final String library) 
             throws IOException
     {
-        final OsData osData = OsData.getOsData(os);
+        final OsData osData = OsData.getOsData(OS);
         
         final StringBuilder sb = new StringBuilder("/");
         sb.append(ROOT);
@@ -188,7 +211,7 @@ public class NativeLibraryLoader
         sb.append("/");
         sb.append(osData.os);
         sb.append("/");
-        sb.append(architecture);
+        sb.append(ARCHITECTURE);
         sb.append("/");
         sb.append(library);
         sb.append(".");
