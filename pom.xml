@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.sitec</groupId>
     <artifactId>NativeLibraryLoader</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -44,8 +44,8 @@
   </repositories>
   
   <scm>
-      <connection>scm:svn:http://172.16.40.5/svn/14_0017/tags/REL-1.0.0</connection>
-      <developerConnection>scm:svn:http://172.16.40.5/svn/14_0017/tags/REL-1.0.0</developerConnection>
+      <connection>scm:svn:http://172.16.40.5/svn/14_0017/trunk</connection>
+      <developerConnection>scm:svn:http://172.16.40.5/svn/14_0017/trunk</developerConnection>
   </scm>
   
   <build>
