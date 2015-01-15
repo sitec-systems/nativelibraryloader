@@ -69,6 +69,7 @@ import org.slf4j.LoggerFactory;
  */
 public class NativeLibraryLoader
 {
+    private static final Map<String, Path> LOADED_NAMESPACES = new ConcurrentHashMap<>();
     private static final Map<String, Path> LOADED_LIBRARYS = new ConcurrentHashMap<>();
     private static final String PROPERTY_KEY = "native_library_loader";
     private static final String ARCH_DETECT_KEY = "arch_detect";
@@ -186,7 +187,6 @@ public class NativeLibraryLoader
         }
         
         LOG.info("Load native library: '{}.{}'", namespace, library);
-        LOG.info("OS: {}, Architecture: {}", OS, ARCHITECTURE);
         
         Path path = LOADED_LIBRARYS.get(namespace + "." + library);
         
@@ -219,14 +219,14 @@ public class NativeLibraryLoader
                             , namespace, library, path);
                         LOG.info("Load native library: '{}.{}' from JAR resource"
                             , namespace, library);
-                        path = extractNativeLibrary(namespace, library);
+                        path = extractLibrary(namespace, library);
                     }
                 }
                 else
                 {
                     LOG.info("Load native library: '{}.{}' from JAR resource"
                             , namespace, library);
-                    path = extractNativeLibrary(namespace, library);
+                    path = extractLibrary(namespace, library);
                 }
                 LOADED_LIBRARYS.put(namespace + "." + library, path);
             }
@@ -250,23 +250,35 @@ public class NativeLibraryLoader
      * @param library The name of the native library file
      * @return The temporary local path
      * @throws IOException If the extraction has failed
-     * @since 1.0
+     * @since 1.1
      */
-    private static Path extractNativeLibrary(final String namespace, final String library) 
+    public synchronized static Path extractLibrary(final String namespace, final String library) 
             throws IOException
     { 
         final String resourcePath = getPathString(namespace, library);
         
-        LOG.debug("JAR ResourcePath: '{}'", resourcePath);
+        LOG.debug("Extract native library '{}.{}' from JAR ResourcePath: '{}'"
+                , namespace, library, resourcePath);
         
         if(NativeLibraryLoader.class.getResource(resourcePath) != null)
         {
+            final Path tempDirectory;
+            
+            if(LOADED_NAMESPACES.containsKey(namespace))
+            {
+                tempDirectory = LOADED_NAMESPACES.get(namespace);
+            }
+            else
+            {
+                tempDirectory = createTempDirectory(namespace);
+                LOADED_NAMESPACES.put(namespace, tempDirectory);
+            }
+            
             Path result;
 
             try(final InputStream resourceInputStream = new BufferedInputStream(
                     NativeLibraryLoader.class.getResourceAsStream(resourcePath)))
             {
-                final Path tempDirectory = createTempDirectory(namespace);
                 final Path tempFile = Paths.get(URI.create(tempDirectory.toUri() 
                         + library + "." + OsData.getOsData(OS).getFileExtension()));
                 Files.createFile(tempFile);
@@ -275,6 +287,9 @@ public class NativeLibraryLoader
 
                 result = tempFile;
             }
+            
+            LOG.debug("Native library '{}.{}' extracted to: '{}'", namespace
+                    , library, result.toString());
 
             return result;
         }
@@ -469,5 +484,10 @@ public class NativeLibraryLoader
 
             return result;
         }
+    }
+    
+    static
+    {
+        LOG.info("OS: {}, Architecture: {}", OS, ARCHITECTURE);
     }
 }
