@@ -38,6 +38,17 @@ import org.slf4j.LoggerFactory;
  * <p>
  *  for example: <code>.../native/com/company/library/windows/amd64/</code>.
  * </p>
+ * 
+ * <p>If a native library has dependency to other native librarys, then its possible 
+ * to extract dependend native librarys before load the needed native library.
+ * For Example:</p>
+ * 
+ * <pre><code>
+ *  NativeLibraryLoader.extractLibrary("com.company.library", "dependendLibraryA");
+ *  NativeLibraryLoader.extractLibrary("com.company.library", "dependendLibraryB");
+ *  NativeLibraryLoader.loadLibrary("com.company.library", "libraryWithDependency");
+ * </code></pre>
+ * 
  * It is possible to configure the loader for loading the native library from custom
  * resource. Following system properties are available.
  * <table border="1">
