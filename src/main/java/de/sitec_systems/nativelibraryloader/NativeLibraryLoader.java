@@ -1,11 +1,27 @@
+/**
+ * NativeLibraryLoader is an framework for handling of JNI dependend native 
+ * librarys.
+ * 
+ * Copyright (C) 2016 sitec systems GmbH <http://www.sitec-systems.de>
+ * 
+ * This file is part of NativeLibraryLoader.
+ * 
+ * NativeLibraryLoader is free software: you can redistribute it and/or modify it 
+ * under the terms of the GNU Lesser General Public License as published by the 
+ * Free Software Foundation, either version 3 of the License, or (at your option) 
+ * any later version.
+ * 
+ * NativeLibraryLoader is distributed in the hope that it will be useful, but WITHOUT 
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more 
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with NativeLibraryLoader. If not, see <http://www.gnu.org/licenses/>.
+ */
 /*
- * Project: 14_0017_NativeLibraryLoader
- * $Header: $
- * Author:  Mattes Standfuss
- * Last Change:
- *    by:   $Author: $
- *    date: $Date:   $
- * Copyright (c): sitec systems GmbH, 2015
+ * Author: Mattes Standfuss
+ * Copyright (c): sitec systems GmbH, 2016
  */
 package de.sitec_systems.nativelibraryloader;
 
