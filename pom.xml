@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.sitec-systems</groupId>
     <artifactId>NativeLibraryLoader</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,7 +23,8 @@
     <scm>
         <connection>scm:git:https://${server.ip}/redmine/projekte/14_0017/scm_14_0017.git</connection>
         <developerConnection>scm:git:https://${server.ip}/redmine/projekte/14_0017/scm_14_0017.git</developerConnection>
-    </scm>
+      <tag>REL-1.1.1</tag>
+  </scm>
   
     <build>
         <plugins>
