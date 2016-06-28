@@ -7,7 +7,7 @@
  *    date: $Date:   $
  * Copyright (c): sitec systems GmbH, 2015
  */
-package de.sitec.nativelibraryloader;
+package de.sitec_systems.nativelibraryloader;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
